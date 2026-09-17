@@ -11,10 +11,10 @@ if (!defined('MOKEB_APP')) {
 }
 
 // ===== تنظیمات دیتابیس =====
-define('DB_HOST', 'sql101.infinityfree.com');   // هاست دیتابیس
-define('DB_NAME', 'if0_42915142_mokeb');         // نام دیتابیس
-define('DB_USER', 'if0_42915142');               // یوزر
-define('DB_PASS', 'AHMADABAD');          // پسورد
+define('DB_HOST', 'mysql-1ec6cbac-mokeb-ahmadababd.g.aivencloud.com');   // هاست دیتابیس
+define('DB_NAME', 'defaultdb');         // نام دیتابیس
+define('DB_USER', 'avnadmin');               // یوزر
+define('DB_PASS', 'AVNS_LMuWDMI3X2lG_r2csLZ');          // پسورد
 define('DB_CHARSET', 'utf8mb4');
 
 // ===== تنظیمات ادمین =====
