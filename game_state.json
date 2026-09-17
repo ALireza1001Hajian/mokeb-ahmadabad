@@ -1,0 +1,9 @@
+{
+    "quiz_running": "0",
+    "site_open": "1",
+    "site_opened_at": "",
+    "quiz_started_at": "",
+    "question_time": 30,
+    "break_time": 5,
+    "total_questions": 10
+}
