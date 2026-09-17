@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#16A34A">
+<meta name="description" content="مسابقه زنده موکب احمدآباد — ۱۰ سوال، حذف تدریجی، کد برنده">
+<meta name="robots" content="noindex, nofollow">
+<title>موکب احمدآباد</title>
+
+<link rel="icon" type="image/png" href="assets/img/favicon.png">
+<link rel="apple-touch-icon" href="assets/img/favicon.png">
+<link href="https://googleapis.com" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+
+<script>
+  // 🔴 آدرس دقیق هاست اوارد اسپیس یا اینفینیتی‌فری خود را اینجا بنویسید (بدون اسلش آخر)
+  const HOST_URL = "http://mokeb-ahmadabad.gt.tc";
+
+  window.__MOKEB__ = {
+    version: '1.0.0',
+    csrf: '',
+    totalQ: 10,
+    qTime: 30,
+    breakTime: 5,
+    quizRunning: false,
+    apiBase: HOST_URL + '/api/',
+    today: new Date().toISOString().slice(0,10)
+  };
+</script>
+</head>
+<body data-quiz-running="0">
+<div class="spiritual-bg" aria-hidden="true"></div>
+<header class="site-header" id="siteHeader">
+  <div class="header-inner">
+    <div class="brand">
+      <img src="assets/img/favicon.png" alt="موکب احمدآباد" class="brand-logo">
+      <div class="brand-text"><span class="brand-title">موکب احمدآباد</span><span class="brand-sub">مسابقه زنده</span></div>
+    </div>
+    <div class="user-chip" id="userChip" hidden>
+      <span class="user-chip-label">شرکت‌کننده</span>
+      <span class="user-chip-name" id="userChipName">—</span>
+    </div>
+  </div>
+  <div class="header-progress" id="headerProgress" hidden><div class="header-progress-bar" id="headerProgressBar" style="width: 0%"></div></div>
+</header>
+
+<main class="app" id="app">
+  <!-- VIEW 0 — سایت بسته -->
+  <section class="view" id="view-closed" data-view="closed" hidden>
+    <div class="card card-closed">
+      <div class="closed-icon" aria-hidden="true"></div>
+      <h2 class="card-title">منتظر باز کردن سایت توسط مجری باشید</h2>
+      <p class="card-subtitle">به‌زودی سایت توسط اپراتور موکب باز خواهد شد</p>
+      <div class="dots-loading" aria-label="در حال انتظار"><span></span><span></span><span></span></div>
+    </div>
+  </section>
+
+  <!-- VIEW 1 — ورود نام -->
+  <section class="view" id="view-name" data-view="name" hidden>
+    <div class="card card-name">
+      <h1 class="card-title">به مسابقه موکب احمدآباد خوش آمدید</h1>
+      <p class="card-subtitle">برای شرکت در مسابقه، نام و نام خانوادگی خود را وارد کنید</p>
+      <form class="form" id="formName" autocomplete="off" novalidate>
+        <div class="field">
+          <label for="inputName" class="field-label">نام و نام خانوادگی</label>
+          <input type="text" id="inputName" name="name" class="field-input" placeholder="مثال: علی محمدی" minlength="3" maxlength="60" required>
+          <div class="field-error" id="nameError" hidden></div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg" id="btnEnter">ورود به مسابقه</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- VIEW 2 — انتظار تأیید اپراتور -->
+  <section class="view" id="view-waiting" data-view="waiting" hidden>
+    <div class="card card-waiting">
+      <h2 class="card-title">منتظر تأیید اپراتور باشید</h2>
+      <div class="welcome-chip"><span>خوش آمدید،</span><strong id="waitingName">—</strong></div>
+      <div class="waiting-extras">
+        <div class="waiting-extra"><span class="waiting-extra-text"><strong id="waitingOnline">۰</strong> نفر در انتظار</span></div>
+      </div>
+      <div class="dots-loading"><span></span><span></span><span></span></div>
+    </div>
+  </section>
+
+  <!-- VIEW 3 — نمایش سوال -->
+  <section class="view" id="view-question" data-view="question" hidden>
+    <div class="card card-question">
+      <div class="q-progress">
+        <span class="q-progress-num"><strong id="qCurrent">1</strong> از <span id="qTotal">10</span></span>
+        <div class="q-progress-track"><div class="q-progress-fill" id="qProgressFill" style="width: 0%"></div></div>
+      </div>
+      <div class="q-timer" id="qTimer" data-state="ok"><span class="timer-num" id="timerNum">30</span></div>
+      <h2 class="q-text" id="qText">—</h2>
+      <div class="q-options" id="qOptions" role="list"></div>
+      <button type="button" class="btn btn-primary btn-lg btn-submit-answer" id="btnSubmitAnswer" disabled>ثبت پاسخ</button>
+      <div class="q-feedback" id="qFeedback" hidden></div>
+    </div>
+  </section>
+
+  <!-- VIEW 3.5 — منتظر دیگران -->
+  <section class="view" id="view-others" data-view="others" hidden>
+    <div class="card card-others">
+      <h2 class="card-title text-success">پاسخ شما ثبت شد</h2>
+      <div class="hadith-box" id="hadithBox"><p class="hadith-text" id="hadithText">—</p><p class="hadith-src" id="hadithSrc">—</p></div>
+    </div>
+  </section>
+
+  <!-- VIEW 4 — وقفه -->
+  <section class="view" id="view-break" data-view="break" hidden>
+    <div class="card card-break">
+      <h2 class="break-title">سوال بعدی در</h2>
+      <div class="break-ring"><span class="break-num" id="breakNum">5</span></div>
+    </div>
+  </section>
+
+  <!-- VIEW 5 — حذف -->
+  <section class="view" id="view-eliminated" data-view="eliminated" hidden>
+    <div class="card card-eliminated">
+      <h2 class="card-title text-danger">متأسفانه از مسابقه حذف شدید</h2>
+      <button type="button" class="btn btn-ghost btn-lg" id="btnCloseElim">بستن</button>
+    </div>
+  </section>
+
+  <!-- VIEW 6 — برنده -->
+  <section class="view" id="view-winner" data-view="winner" hidden>
+    <div class="card card-winner">
+      <h2 class="card-title text-success">تبریک! شما برنده شدید</h2>
+      <div class="code-card"><div class="code-value" id="codeValue">─────</div></div>
+    </div>
+  </section>
+</main>
+
+<script src="assets/js/hadiths.js" defer></script>
+<script src="assets/js/main.js" defer></script>
+</body>
+</html>
